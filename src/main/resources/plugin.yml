@@ -1,0 +1,6 @@
+name: SkillifyFishing
+version: '1.0.0'
+main: me.zaksen.skillify_fishing.SkillifyFishing
+api-version: '1.20'
+authors: [ Zaksen_ ]
+depend: [ SkillifyCore ]
