@@ -7,7 +7,7 @@ import me.zaksen.skillify_core.config.Mysql
 @Serializable
 data class MainConfig(
     @SerialName("database_connection")
-    val db_connection: Mysql = Mysql(),
+    val dbConnection: Mysql = Mysql(),
 
     @SerialName("profiles_table")
     val playersTable: String = "players",

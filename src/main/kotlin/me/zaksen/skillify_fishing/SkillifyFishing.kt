@@ -7,10 +7,13 @@ import me.zaksen.skillify_fishing.database.FishingSkillRepository
 import me.zaksen.skillify_fishing.event.PlayerListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 
 class SkillifyFishing : JavaPlugin() {
 
+    private val logger: Logger = LoggerFactory.getLogger("SkillifyFishing")
     private lateinit var mainConfig: MainConfig
     private lateinit var fishingRepository: FishingSkillRepository
 
@@ -18,19 +21,21 @@ class SkillifyFishing : JavaPlugin() {
         mainConfig = loadConfig(File(dataFolder, "config.yml"))
 
         fishingRepository = FishingSkillRepository(
-            mainConfig.db_connection.host,
-            mainConfig.db_connection.port,
-            mainConfig.db_connection.base,
-            mainConfig.db_connection.table,
-            mainConfig.db_connection.user,
-            mainConfig.db_connection.pass,
+            logger,
+            mainConfig.dbConnection.host,
+            mainConfig.dbConnection.port,
+            mainConfig.dbConnection.base,
+            mainConfig.dbConnection.table,
+            mainConfig.dbConnection.user,
+            mainConfig.dbConnection.pass,
             mainConfig.playersTable
         )
 
         Bukkit.getPluginManager().registerEvents(
             PlayerListener(
                 SkillifyCore.getCore().playersRepository,
-                fishingRepository
+                fishingRepository,
+                logger
             ),
             this
         )

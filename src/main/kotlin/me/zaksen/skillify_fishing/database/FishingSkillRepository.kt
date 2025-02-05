@@ -3,11 +3,13 @@ package me.zaksen.skillify_fishing.database
 import me.zaksen.skillify_core.api.database.Repository
 import me.zaksen.skillify_core.database.dao.PlayerProfile
 import me.zaksen.skillify_fishing.database.dao.FishingSkill
+import org.slf4j.Logger
 import java.sql.Connection
 import java.sql.DriverManager
 import java.util.*
 
 class FishingSkillRepository(
+    private val logger: Logger,
     host: String,
     port: String,
     base: String,
@@ -20,6 +22,7 @@ class FishingSkillRepository(
     private val connection: Connection = DriverManager.getConnection("jdbc:mysql://$host:$port/$base", user, pass)
 
     init {
+        FishingSkillTableBuilder(connection, table).buildTable()
         try {
             val statement = connection.prepareStatement("""
                 SELECT * 
@@ -39,6 +42,8 @@ class FishingSkillRepository(
                 val experience = set.getLong("fishing_experience")
                 cache.add(FishingSkill(id, PlayerProfile(playerId, UUID.fromString(uuid), name, registerTime), experience))
             }
+
+            logger.info("Loaded ${cache.size} entries")
         } catch (_: Exception) {}
     }
 
