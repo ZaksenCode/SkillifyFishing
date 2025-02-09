@@ -22,7 +22,7 @@ class FishingSkillRepository(
     private val connection: Connection = DriverManager.getConnection("jdbc:mysql://$host:$port/$base", user, pass)
 
     init {
-        FishingSkillTableBuilder(connection, table).buildTable()
+        FishingSkillTableBuilder(connection, table, profilesTable).buildTable()
         try {
             val statement = connection.prepareStatement("""
                 SELECT * 
@@ -39,12 +39,12 @@ class FishingSkillRepository(
                 val uuid = set.getString("player_uuid")
                 val name = set.getString("player_name")
                 val registerTime = set.getTimestamp("player_register_time")
-                val experience = set.getLong("fishing_experience")
+                val experience = set.getLong("experience")
                 cache.add(FishingSkill(id, PlayerProfile(playerId, UUID.fromString(uuid), name, registerTime), experience))
             }
 
             logger.info("Loaded ${cache.size} entries")
-        } catch (_: Exception) {}
+        } catch (e: Exception) { }
     }
 
     override fun add(value: FishingSkill) {
